@@ -1,9 +1,6 @@
 package lu.pata.fsync.fsyncserver;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,15 +10,20 @@ import java.util.Base64;
 public class Encode {
 
     //TODO: implement @RequestBody
+    //@RequestParam("fileName") String fileName,@RequestParam("data") String data
     @RequestMapping(value="/encode",method = RequestMethod.POST)
-    public String encode(@RequestParam("fileName") String fileName,@RequestParam("data") String data){
+    public FsyncResponse encode(@RequestBody FsyncResponse req){
 
-        try(FileOutputStream fos=new FileOutputStream("data/"+fileName,true)) {
-            fos.write(Base64.getDecoder().decode(data));
+        try(FileOutputStream fos=new FileOutputStream("data/"+req.getFileName(),true)) {
+            fos.write(Base64.getDecoder().decode(req.getData()));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return "Updated: "+fileName;
+        FsyncResponse r=new FsyncResponse();
+        r.setData("date din fisier");
+        r.setFileName("nume fisier");
+
+        return r;
     }
 }

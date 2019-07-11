@@ -3,13 +3,20 @@ package lu.pata.fsync.fsyncclient;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.io.File;
+import java.io.FileInputStream;
+
 @SpringBootApplication
 public class FsyncClientApplication implements CommandLineRunner {
     static Logger log=LoggerFactory.getLogger(FsyncClientApplication.class);
+
+    @Autowired
+    FileSend fileSend;
 
     public static void main(String[] args) {
         SpringApplication.run(FsyncClientApplication.class, args);
@@ -20,7 +27,7 @@ public class FsyncClientApplication implements CommandLineRunner {
         CommandLine arguments=parseArguments(args);
 
         if(arguments.hasOption("send")){
-
+            fileSend.send(new FileInputStream(new File(arguments.getOptionValue("send"))));
         } else {
             printHelp();
         }

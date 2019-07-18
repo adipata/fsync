@@ -1,1 +1,4 @@
 fsync-server/src/test/home/
+*.iml
+target
+home

@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.security.Security;
 
 @SpringBootApplication
 public class FsyncClientApplication implements CommandLineRunner {
@@ -18,7 +19,11 @@ public class FsyncClientApplication implements CommandLineRunner {
     @Autowired
     FileSend fileSend;
 
+    @Autowired
+    FileDownload fileDownload;
+
     public static void main(String[] args) {
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         SpringApplication.run(FsyncClientApplication.class, args);
     }
 
@@ -26,8 +31,20 @@ public class FsyncClientApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         CommandLine arguments=parseArguments(args);
 
-        if(arguments.hasOption("send")){
-            fileSend.send(new FileInputStream(new File(arguments.getOptionValue("send"))));
+        if(arguments.hasOption("file")
+                && arguments.hasOption("key")
+                && arguments.hasOption("keys")){
+
+            if(arguments.hasOption("send"))
+                fileSend.send(new FileInputStream(new File(arguments.getOptionValue("send"))),
+                        arguments.getOptionValue("file"),
+                        arguments.getOptionValue("key"),
+                        arguments.getOptionValue("keys"));
+
+            if(arguments.hasOption("receive"))
+                fileDownload.download(arguments.getOptionValue("file"),
+                        arguments.getOptionValue("key"),
+                        arguments.getOptionValue("keys"));
         } else {
             printHelp();
         }
@@ -50,9 +67,12 @@ public class FsyncClientApplication implements CommandLineRunner {
     private Options getOptions(){
         Options options=new Options();
         options.addOption("s","send",true,"Send a file");
+        options.addOption("r","receive",true,"Receive a file");
+        options.addOption("f","file",true,"The file name on the server");
+        options.addOption("k","key",true,"Encryption key");
+        options.addOption("ks","keys",true,"Key seed");
         return options;
     }
-
 
     private void printHelp(){
         Options options=getOptions();

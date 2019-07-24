@@ -1,0 +1,5 @@
+Secure channel documentation
+
+https://stackoverflow.com/questions/18244630/elliptic-curve-with-digital-signature-algorithm-ecdsa-implementation-on-bouncy
+
+https://stackoverflow.com/questions/21081713/diffie-hellman-key-exchange-in-java

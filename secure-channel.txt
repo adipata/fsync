@@ -1,0 +1,5 @@
+Clientul trimite un fisier.
+Trimiterea se face secvential cu mai multe pachete de date intr-o sesiune. 
+Trimiterea
+
+
